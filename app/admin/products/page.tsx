@@ -4,11 +4,14 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { db } from "@/app/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { Product } from "@/types/product";
+import { deleteProduct } from "@/services/ProductService";
 import { Button } from "@mui/material";
-import { deleteProduct, updateProduct } from "@/services/ProductService";
+import EditProductModal from "@/components/EditProductModal";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [open, setOpen] = useState(false);
 
   const fetchProducts = async () => {
     const querySnapshot = await getDocs(collection(db, "products"));
@@ -19,14 +22,15 @@ export default function AdminProductsPage() {
     fetchProducts();
   }, []);
 
+  // ✅ Define handleDelete here
   const handleDelete = async (id: string) => {
     await deleteProduct(id);
     await fetchProducts();
   };
 
-  const handleEdit = async (id: string) => {
-    await updateProduct(id, { name: "Updated Name" }); // temporary demo
-    await fetchProducts();
+  const handleEdit = (product: Product) => {
+    setSelectedProduct(product);
+    setOpen(true);
   };
 
   const columns: GridColDef[] = [
@@ -43,7 +47,7 @@ export default function AdminProductsPage() {
             variant="outlined"
             color="primary"
             size="small"
-            onClick={() => handleEdit(params.row.id)}
+            onClick={() => handleEdit(params.row as Product)}
             style={{ marginRight: "0.5rem" }}
           >
             Edit
@@ -67,10 +71,14 @@ export default function AdminProductsPage() {
       <DataGrid
         rows={products}
         columns={columns}
-        initialState={{
-          pagination: { paginationModel: { pageSize: 5, page: 0 } },
-        }}
+        initialState={{ pagination: { paginationModel: { pageSize: 5, page: 0 } } }}
         pageSizeOptions={[5, 10, 20]}
+      />
+      <EditProductModal
+        open={open}
+        onClose={() => setOpen(false)}
+        product={selectedProduct}
+        onUpdated={fetchProducts}
       />
     </div>
   );
