@@ -1,11 +1,8 @@
-import React, { Component } from 'react'
-
-export default class page extends Component {
-  render() {
-    return (
-      <div>
-        
-      </div>
-    )
-  }
+export default function AdminPage() {
+  return (
+    <div>
+      <h1>Admin Dashboard</h1>
+      <p>Welcome to the admin panel.</p>
+    </div>
+  );
 }
