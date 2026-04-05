@@ -4,6 +4,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { db } from "@/app/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { Product } from "@/types/product";
+import AddProductForm from "@/components/AddProductForm";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -23,8 +24,9 @@ export default function AdminProductsPage() {
   ];
 
   return (
-    <div style={{ height: 500, width: "100%" }}>
+     <div style={{ height: 600, width: "100%" }}>
       <h1>Admin Products</h1>
+      <AddProductForm />
       <DataGrid
         rows={products}
         columns={columns}
