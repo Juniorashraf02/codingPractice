@@ -5,4 +5,6 @@ export interface Order {
   quantity: number;
   totalPrice: number;
   status: "pending" | "shipped" | "delivered";
+  orderDate: string;     // ISO date string
+  shippedDate?: string;  // optional
 }
